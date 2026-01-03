@@ -10,6 +10,7 @@ class GeminiClient:
     def __init__(self):
         # We use a string for 'model' to satisfy checks like 'if self.client.model:' in other files
         self.model = None 
+        # ⚡ FIX 1: Removed 'models/' prefix which caused the 404 error
         self.model_name = 'gemini-1.5-flash'
         self.api_key_status = "not_set"
         
@@ -39,10 +40,13 @@ class GeminiClient:
             }]
         }
 
-        max_retries = 3
+        # ⚡ FIX 2: Reduced retries to avoid hitting the 10s Vercel limit
+        max_retries = 2
+        
         for attempt in range(max_retries):
             try:
-                response = requests.post(url, headers=headers, json=data, timeout=30)
+                # ⚡ FIX 3: Timeout set to 9s (Vercel kills processes at 10s strict)
+                response = requests.post(url, headers=headers, json=data, timeout=9)
                 
                 if response.status_code == 200:
                     self.api_key_status = "valid"
@@ -55,7 +59,8 @@ class GeminiClient:
                 
                 # Handle specific error codes
                 if response.status_code in [429, 503]:
-                    wait_time = 5 + (attempt * 2)
+                    # ⚡ FIX 4: Short wait time so we don't die waiting
+                    wait_time = 1 
                     print(f"⚠️ Rate Limit/Quota Hit. Waiting {wait_time}s...")
                     time.sleep(wait_time)
                     continue
@@ -69,7 +74,8 @@ class GeminiClient:
                 
             except Exception as e:
                 print(f"❌ Request Failed: {e}")
+                # Short sleep before retry
                 if attempt < max_retries - 1:
-                    time.sleep(2)
+                    time.sleep(1)
         
         return None
