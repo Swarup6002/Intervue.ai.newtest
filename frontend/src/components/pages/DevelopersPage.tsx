@@ -169,7 +169,7 @@ function DevelopersPageContent() {
   const CARD_COLORS = ["#06b6d4", "#a855f7", "#ec4899", "#3b82f6"]; // Cyan, Purple, Pink, Blue
 
   const technologies = [
-    { icon: Brain, name: 'Gemini 2.0 AI', description: 'Advanced AI model for intelligent interview', color: '#a855f7' }, // Purple
+    { icon: Brain, name: 'Gemini 1.5 AI', description: 'Advanced AI model for intelligent interview', color: '#a855f7' }, // Purple
     { icon: Code2, name: 'React & TypeScript', description: 'Modern frontend framework with type safety', color: '#3b82f6' }, // Blue
     { icon: Zap, name: 'Framer Motion', description: 'Smooth animations and micro-interactions', color: '#f59e0b' }, // Amber
     { icon: Mic2, name: 'Web Speech API', description: 'Voice recognition and text-to-speech capabilities', color: '#ef4444' }, // Red

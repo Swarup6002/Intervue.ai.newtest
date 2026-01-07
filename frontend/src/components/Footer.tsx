@@ -133,7 +133,7 @@ export default function Footer() {
               © {currentYear} Intervue.ai. All rights reserved.
             </p>
             <p className="font-paragraph text-sm text-gray-500 dark:text-foreground/50">
-              Powered by Gemini 2.0 AI
+              Powered by Gemini 1.5 AI
             </p>
           </div>
         </div>

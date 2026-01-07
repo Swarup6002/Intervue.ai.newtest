@@ -214,7 +214,7 @@ function HomePageContent() {
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md mb-8">
                   <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-cyan-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
-                  <span className="ml-4 text-sm font-medium text-cyan-200 tracking-wide uppercase">Gemini 2.0 Integrated</span>
+                  <span className="ml-4 text-sm font-medium text-cyan-200 tracking-wide uppercase">Gemini 1.5 Integrated</span>
                 </div>
 
                 <h1 className="font-heading text-6xl md:text-8xl font-bold leading-tight mb-8">
