@@ -15,26 +15,26 @@ import SessionDetailPage from './pages/SessionDetailPage';
 import DevelopersPage from './pages/DevelopersPage'; // <--- 1. ADDED IMPORT
 
 export default function Router() {
-  return (
-    <BrowserRouter>
-      {/* 2. WRAP EVERYTHING INSIDE AUTH PROVIDER */}
-      <AuthProvider>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/signin" element={<SignInPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/logout" element={<LogoutPage />} />
+  return (
+    <BrowserRouter>
+      {/* 2. WRAP EVERYTHING INSIDE AUTH PROVIDER */}
+      <AuthProvider>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/signin" element={<SignInPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/logout" element={<LogoutPage />} />
 
-          {/* App Routes */}
-          <Route path="/interview" element={<InterviewPage />} />
-          <Route path="/sessions" element={<SessionsPage />} />
-          <Route path="/sessions/:sessionId" element={<SessionDetailPage />} />
-          
-          {/* 👇 3. ADDED THIS ROUTE SO THE PAGE LOADS */}
-          <Route path="/developers" element={<DevelopersPage />} />
-        </Routes>
-      </AuthProvider>
-    </BrowserRouter>
-  );
+          {/* App Routes */}
+          <Route path="/interview" element={<InterviewPage />} />
+          <Route path="/sessions" element={<SessionsPage />} />
+          <Route path="/sessions/:sessionId" element={<SessionDetailPage />} />
+          
+          {/* 👇 3. ADDED THIS ROUTE SO THE PAGE LOADS */}
+          <Route path="/developers" element={<DevelopersPage />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
+  );
 }
