@@ -7,7 +7,7 @@ import {
   useInView, 
   AnimatePresence 
 } from 'framer-motion';
-// ✅ IMPORT BrowserRouter HERE so the page works by itself
+// ✅ Keep BrowserRouter to ensure the app stays fixed
 import { BrowserRouter, useLocation } from 'react-router-dom';
 import { 
   MessageSquare, 
@@ -114,32 +114,45 @@ const ParallaxText = ({ children }: { children: string }) => (
   </div>
 );
 
-// --- GLOWING CARD (Vibrant Version) ---
-const GlowingCard = ({ children, className = "", color = "#a855f7" }: { children: React.ReactNode, className?: string, color?: string }) => {
+// --- RESTORED: ORIGINAL GLOWING CARD ---
+// Removed the 'color' prop. Removed the static border.
+// Restored the subtle mouse-follow effect.
+const GlowingCard = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+
   function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
     const { left, top } = currentTarget.getBoundingClientRect();
-    mouseX.set(clientX - left); mouseY.set(clientY - top);
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
   }
+
   return (
-    <div className={`group relative border border-white/10 bg-black/40 backdrop-blur-xl overflow-hidden transition-all duration-500 hover:scale-[1.02] ${className}`} onMouseMove={handleMouseMove}>
-      <div className="absolute inset-0 z-0 transition-all duration-500 opacity-0 group-hover:opacity-100" style={{ boxShadow: `0 0 100px -20px ${color}`, border: `1px solid ${color}` }} />
-      <div className="pointer-events-none absolute -inset-px opacity-10 transition-opacity duration-500 group-hover:opacity-30" style={{ background: `radial-gradient(at top left, ${color}, transparent 70%)` }} />
-      <motion.div className="pointer-events-none absolute -inset-px rounded-xl opacity-0 transition duration-300 group-hover:opacity-100 z-10" style={{ background: useMotionTemplate`radial-gradient(400px circle at ${mouseX}px ${mouseY}px, rgba(255, 255, 255, 0.1), transparent 80%)` }} />
-      <div className="relative h-full z-20">{children}</div>
+    <div
+      className={`group relative border border-white/10 bg-black/40 backdrop-blur-xl overflow-hidden rounded-3xl ${className}`}
+      onMouseMove={handleMouseMove}
+    >
+      <motion.div
+        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              650px circle at ${mouseX}px ${mouseY}px,
+              rgba(147, 51, 234, 0.4),
+              transparent 80%
+            )
+          `,
+        }}
+      />
+      <div className="relative h-full">{children}</div>
     </div>
   );
 };
 
-// --- CONTENT COMPONENT ---
-// This component uses hooks like useScroll and useLocation.
-// It MUST be inside the BrowserRouter.
 function HomePageContent() {
   const { scrollY } = useScroll();
   const [activeFeatureIndex, setActiveFeatureIndex] = useState(0);
 
-  // This is safe because it's wrapped in the export below
   const location = useLocation();
   
   useEffect(() => {
@@ -217,18 +230,18 @@ function HomePageContent() {
 
         <section className="py-20 bg-white/5 border-y border-white/10 overflow-hidden"><ParallaxText>SYSTEM DESIGN • ALGORITHMS • BEHAVIORAL •</ParallaxText><ParallaxText>FRONTEND • BACKEND • DEVOPS • FULLSTACK •</ParallaxText></section>
 
-        {/* BENTO GRID */}
+        {/* BENTO GRID - RESTORED TO ORIGINAL */}
         <section className="py-32 container max-w-[120rem] mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[400px]">
             <motion.div className="md:col-span-2" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, amount: 0.2 }} transition={{ duration: 0.5, delay: 0 }}>
-              <GlowingCard className="rounded-3xl p-10 flex flex-col justify-between group h-full" color="#06b6d4">
+              <GlowingCard className="p-10 flex flex-col justify-between group h-full">
                 <div className="relative z-10"><div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mb-6"><Terminal className="w-6 h-6 text-white" /></div><h3 className="text-3xl font-bold text-white mb-2">Full-Stack Environment</h3><p className="text-gray-400 max-w-md">Complete simulation environment supporting React, Node, Python, and Go.</p></div>
                 <div className="absolute right-0 bottom-0 w-2/3 h-2/3 bg-gradient-to-tl from-cyan-500/20 to-transparent rounded-tl-[100px] opacity-50 group-hover:scale-110 transition-transform duration-500" />
                 <div className="absolute right-10 bottom-10 font-mono text-sm text-cyan-300/50">$ npm run interview<br/>{'>'} Starting server...<br/>{'>'} Environment ready.</div>
               </GlowingCard>
             </motion.div>
             <motion.div className="md:row-span-2" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, amount: 0.2 }} transition={{ duration: 0.5, delay: 0.2 }}>
-              <GlowingCard className="rounded-3xl p-10 relative overflow-hidden h-full" color="#a855f7">
+              <GlowingCard className="p-10 relative overflow-hidden h-full">
                 <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-purple-500/5 to-transparent opacity-50" />
                 <div className="relative z-10 h-full flex flex-col">
                   <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mb-6"><BarChart3 className="w-6 h-6 text-white" /></div><h3 className="text-3xl font-bold text-white mb-2">Deep Analytics</h3><p className="text-gray-400 mb-8">Track your growth over time with detailed performance metrics.</p>
@@ -237,12 +250,12 @@ function HomePageContent() {
               </GlowingCard>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, amount: 0.2 }} transition={{ duration: 0.5, delay: 0.3 }}>
-              <GlowingCard className="rounded-3xl p-10 flex flex-col justify-center items-center text-center h-full" color="#22c55e">
+              <GlowingCard className="p-10 flex flex-col justify-center items-center text-center h-full">
                 <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-purple-500 to-indigo-500 flex items-center justify-center mb-6 shadow-lg shadow-purple-500/20"><Globe className="w-10 h-10 text-white" /></div><h3 className="text-xl font-bold text-white mb-2">Global Standards</h3><p className="text-gray-400 text-sm">Questions curated from top tech companies worldwide.</p>
               </GlowingCard>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, amount: 0.2 }} transition={{ duration: 0.5, delay: 0.4 }}>
-              <GlowingCard className="rounded-3xl p-10 flex flex-col justify-center items-center text-center h-full" color="#ec4899">
+              <GlowingCard className="p-10 flex flex-col justify-center items-center text-center h-full">
                 <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-cyan-500 to-teal-500 flex items-center justify-center mb-6 shadow-lg shadow-cyan-500/20"><Zap className="w-10 h-10 text-white" /></div><h3 className="text-xl font-bold text-white mb-2">Instant Feedback</h3><p className="text-gray-400 text-sm">Get graded immediately after every answer.</p>
               </GlowingCard>
             </motion.div>
@@ -270,7 +283,7 @@ function HomePageContent() {
   );
 }
 
-// ✅ FIX IS HERE: WRAP THE CONTENT IN BrowserRouter
+// ✅ WRAP CONTENT IN BrowserRouter TO FIX CRASH
 export default function HomePage() {
   return (
     <BrowserRouter>
