@@ -9,6 +9,7 @@ import {
 } from 'framer-motion';
 // ✅ 1. Import AuthProvider
 import { AuthProvider } from '@/lib/AuthContext';
+// ✅ 2. Import Router hooks
 import { BrowserRouter, useLocation } from 'react-router-dom';
 import { 
   MessageSquare, 
@@ -26,7 +27,7 @@ import Footer from '@/components/Footer';
 
 // --- IMAGES ---
 const featureImages = [
-  // Using the renamed file to break cache
+  // Using v2 to force browser cache refresh
   "/context-dialogue-v2.png", 
   "https://plus.unsplash.com/premium_photo-1683121710572-7723bd2e235d?q=80&w=1000&auto=format&fit=crop", 
   "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1000&auto=format&fit=crop"
@@ -116,7 +117,7 @@ const ParallaxText = ({ children }: { children: string }) => (
   </div>
 );
 
-// --- GLOWING CARD (Original Subtle Version) ---
+// --- GLOWING CARD (Original Subtle Version - No Specific Colors) ---
 const GlowingCard = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -230,7 +231,7 @@ function HomePageContent() {
 
         <section className="py-20 bg-white/5 border-y border-white/10 overflow-hidden"><ParallaxText>SYSTEM DESIGN • ALGORITHMS • BEHAVIORAL •</ParallaxText><ParallaxText>FRONTEND • BACKEND • DEVOPS • FULLSTACK •</ParallaxText></section>
 
-        {/* BENTO GRID */}
+        {/* BENTO GRID - RESTORED TO ORIGINAL */}
         <section className="py-32 container max-w-[120rem] mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[400px]">
             <motion.div className="md:col-span-2" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, amount: 0.2 }} transition={{ duration: 0.5, delay: 0 }}>
@@ -283,7 +284,7 @@ function HomePageContent() {
   );
 }
 
-// ✅ 2. FIX IS HERE: Wrap CONTENT with AuthProvider inside BrowserRouter
+// ✅ 3. FIX: WRAP THE CONTENT IN BrowserRouter AND AuthProvider
 export default function HomePage() {
   return (
     <BrowserRouter>
