@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion'; // Added AnimatePresence for smooth exit
 import { Moon, Sun, Menu, X, User, LogOut, Settings } from 'lucide-react';
 
 // ✅ SAFE IMPORTS (Relative paths)
@@ -13,7 +13,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
-import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
 
 export default function Header() {
   const { user, signOut } = useAuth();
@@ -26,6 +25,11 @@ export default function Header() {
   useEffect(() => {
     document.documentElement.classList.add('dark');
   }, []);
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
 
   const handleLogout = async () => {
     await signOut();
@@ -41,11 +45,7 @@ export default function Header() {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    // 💎 ULTRA GLASS EFFECT:
-    // 1. bg-black/20 (Very transparent dark layer)
-    // 2. backdrop-blur-xl (Strong blur of content behind)
-    // 3. border-white/10 (Subtle white edge like real glass)
-    // 4. supports-[backdrop-filter]:bg-black/20 (Fallback for older browsers)
+    // 💎 ULTRA GLASS EFFECT
     <header className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-purple-500/5 transition-all duration-300 supports-[backdrop-filter]:bg-black/10">
       <div className="max-w-[100rem] mx-auto px-8 py-4">
         
@@ -53,7 +53,7 @@ export default function Header() {
         <div className="flex items-center justify-between relative">
           
           {/* --- LEFT: Logo --- */}
-          <Link to="/" className="flex items-center gap-3 group z-20">
+          <Link to="/" className="flex items-center gap-3 group z-20" onClick={() => setMobileMenuOpen(false)}>
             <motion.div
               whileHover={{ scale: 1.05, rotate: 5 }}
               className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/20"
@@ -65,8 +65,7 @@ export default function Header() {
             </span>
           </Link>
 
-          {/* --- CENTER: Desktop Nav --- */}
-          {/* Absolute positioning keeps this DEAD CENTER regardless of logo/user width */}
+          {/* --- CENTER: Desktop Nav (Hidden on Mobile) --- */}
           <nav className="hidden md:flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2 z-10">
             {navLinks.map((link) => (
               <Link
@@ -92,7 +91,7 @@ export default function Header() {
 
           {/* --- RIGHT: Actions --- */}
           <div className="flex items-center gap-4 z-20">
-            {/* User Menu */}
+            {/* Desktop User Menu (Hidden on Mobile) */}
             <div className="hidden md:flex items-center gap-4">
               {user ? (
                 <DropdownMenu>
@@ -130,13 +129,84 @@ export default function Header() {
               )}
             </div>
 
-            {/* Mobile Menu Trigger */}
-            <Button variant="ghost" className="md:hidden text-white hover:bg-white/10" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-              <Menu />
+            {/* Mobile Menu Trigger Button */}
+            <Button 
+              variant="ghost" 
+              className="md:hidden text-white hover:bg-white/10" 
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X /> : <Menu />}
             </Button>
           </div>
         </div>
       </div>
+
+      {/* 📱 MOBILE MENU DROPDOWN (The missing part!) */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden border-t border-white/10 bg-[#020617]/95 backdrop-blur-xl overflow-hidden"
+          >
+            <div className="flex flex-col p-4 space-y-4">
+              {/* Navigation Links */}
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`text-base font-medium py-2 px-4 rounded-lg transition-colors ${
+                    isActive(link.path)
+                      ? 'bg-indigo-500/10 text-indigo-400'
+                      : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              ))}
+
+              <div className="h-px bg-white/10 my-2" />
+
+              {/* Auth Buttons for Mobile */}
+              {user ? (
+                <>
+                  <div className="flex items-center gap-3 px-4 py-2 text-gray-400">
+                    <div className="w-8 h-8 bg-indigo-500/20 rounded-full flex items-center justify-center border border-indigo-500/30">
+                      <User className="w-4 h-4 text-indigo-400" />
+                    </div>
+                    <span className="text-sm font-medium text-white">
+                      {user.user_metadata?.full_name || user.email?.split('@')[0]}
+                    </span>
+                  </div>
+                  
+                  <Button 
+                    onClick={handleLogout} 
+                    variant="ghost" 
+                    className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-red-500/10 px-4"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" /> Sign Out
+                  </Button>
+                </>
+              ) : (
+                <div className="flex flex-col gap-3 px-2">
+                  <Link to="/signin" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-white hover:bg-white/5">
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Link to="/signup" onClick={() => setMobileMenuOpen(false)}>
+                    <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg">
+                      Sign Up
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
