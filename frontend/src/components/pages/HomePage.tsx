@@ -23,11 +23,10 @@ import {
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Image } from '@/components/ui/image'; // Ensure this exists or use standard <img />
+import { Image } from '@/components/ui/image'; 
 
 // --- IMAGES ---
 const featureImages = [
-  // Using v2 to ensure browser gets the new image
   "/context-dialogue-v2.png", 
   "https://plus.unsplash.com/premium_photo-1683121710572-7723bd2e235d?q=80&w=1000&auto=format&fit=crop", 
   "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1000&auto=format&fit=crop"
@@ -51,41 +50,89 @@ const featuresData = [
   }
 ];
 
-// --- Background Component ---
+// --- ☄️ METEOR CANVAS (From 1st Code: Blue Tail + Yellow Head) ---
 const MeteorCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
     let animationFrameId: number;
+
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
     window.addEventListener('resize', resize);
     resize();
+
+    // Configuration
     const meteor = {
       x: Math.random() * canvas.width + canvas.width * 0.5, 
-      y: -300, speed: 4, tailLength: 400,
+      y: -300, 
+      speed: 4, // Cinematic Slow Fall
+      tailLength: 400,
     };
+
     const animate = () => {
+      // Clear with trail effect
       ctx.fillStyle = 'rgba(2, 6, 23, 0.2)'; 
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      meteor.x -= meteor.speed; meteor.y += meteor.speed;
+
+      // Move South-West
+      meteor.x -= meteor.speed; 
+      meteor.y += meteor.speed;
+
+      // Reset
       if (meteor.y > canvas.height + 400 || meteor.x < -400) {
-        meteor.x = Math.random() * canvas.width + canvas.width * 0.5; meteor.y = -300; 
+        meteor.x = Math.random() * canvas.width + canvas.width * 0.5; 
+        meteor.y = -300; 
       }
-      ctx.save(); ctx.translate(meteor.x, meteor.y); ctx.rotate(-Math.PI / 4); 
+
+      ctx.save();
+      ctx.translate(meteor.x, meteor.y);
+      // ROTATE: Tail points North-East
+      ctx.rotate(-Math.PI / 4); 
+
+      // 1. Blue Energy Tail
       const gradient = ctx.createLinearGradient(0, 0, meteor.tailLength, 0); 
-      gradient.addColorStop(0, 'rgba(255, 255, 255, 0.9)'); gradient.addColorStop(1, 'rgba(0, 0, 50, 0)');           
-      ctx.fillStyle = gradient; ctx.beginPath(); ctx.moveTo(0, -3); ctx.lineTo(meteor.tailLength, -10); ctx.lineTo(meteor.tailLength, 10); ctx.lineTo(0, 3); ctx.fill();
-      ctx.restore(); animationFrameId = requestAnimationFrame(animate);
+      gradient.addColorStop(0, 'rgba(255, 255, 255, 0.9)');   
+      gradient.addColorStop(0.1, 'rgba(0, 255, 255, 0.8)');   
+      gradient.addColorStop(0.5, 'rgba(0, 100, 255, 0.4)');   
+      gradient.addColorStop(1, 'rgba(0, 0, 50, 0)');           
+
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.moveTo(0, -3); 
+      ctx.lineTo(meteor.tailLength, -10); 
+      ctx.lineTo(meteor.tailLength, 10);
+      ctx.lineTo(0, 3);
+      ctx.fill();
+
+      // 2. Burning Yellow Head (Vibrating)
+      ctx.beginPath();
+      const flicker = Math.random() * 2; 
+      ctx.arc(0, 0, 7 + flicker, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff'; 
+      ctx.shadowBlur = 30;       
+      ctx.shadowColor = '#ffff00'; // Yellow Glow
+      ctx.fill();
+
+      ctx.restore();
+      animationFrameId = requestAnimationFrame(animate);
     };
+
     animate();
-    return () => { window.removeEventListener('resize', resize); cancelAnimationFrame(animationFrameId); };
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      cancelAnimationFrame(animationFrameId);
+    };
   }, []);
+
   return <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none" />;
 };
 
@@ -117,7 +164,7 @@ const ParallaxText = ({ children }: { children: string }) => (
   </div>
 );
 
-// --- GLOWING CARD (Original Subtle Version - No specific colors) ---
+// --- GLOWING CARD (Original Subtle Version - From 2nd Code) ---
 const GlowingCard = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -166,7 +213,10 @@ function HomePageContent() {
 
   return (
     <div className="relative min-h-screen bg-[#020617] text-white font-sans selection:bg-cyan-500/30">
+      
+      {/* 1. METEOR CANVAS (Blue/Yellow Animation) */}
       <MeteorCanvas />
+      
       <div className="relative z-10">
         <Header />
         
