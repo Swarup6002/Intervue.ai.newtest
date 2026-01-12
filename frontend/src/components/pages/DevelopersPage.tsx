@@ -54,7 +54,7 @@ const MeteorCanvas = () => {
       gradient.addColorStop(0, 'rgba(255, 255, 255, 0.9)');   
       gradient.addColorStop(0.1, 'rgba(0, 255, 255, 0.8)');   
       gradient.addColorStop(0.5, 'rgba(0, 100, 255, 0.4)');   
-      gradient.addColorStop(1, 'rgba(0, 0, 50, 0)');          
+      gradient.addColorStop(1, 'rgba(0, 0, 50, 0)');           
 
       ctx.fillStyle = gradient;
       ctx.beginPath();
@@ -132,7 +132,7 @@ function DevelopersPageContent() {
     const fetchTeamMembers = async () => {
       try {
         const { data, error } = await supabase
-          .from('team_members')
+          .from('Team_memberV2')
           .select('*')
           .order('display_order', { ascending: true });
 
@@ -165,8 +165,8 @@ function DevelopersPageContent() {
     fetchTeamMembers();
   }, []);
 
-  // Define colors for cards
-  const CARD_COLORS = ["#06b6d4", "#a855f7", "#ec4899", "#3b82f6"]; // Cyan, Purple, Pink, Blue
+  // ✅ UPDATED COLORS: 1st Purple, 2nd Greenish-Blue (Cyan)
+  const CARD_COLORS = ["#a855f7", "#06b6d4", "#ec4899", "#3b82f6"]; // Purple, Cyan, Pink, Blue
 
   const technologies = [
     { icon: Brain, name: 'Gemini 1.5 AI', description: 'Advanced AI model for intelligent interview', color: '#a855f7' }, // Purple
