@@ -1,8 +1,10 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Github, Twitter, Linkedin, Mail } from 'lucide-react';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const contactEmail = "intervuedotai@gmail.com";
 
   return (
     <footer className="bg-gradient-to-br from-secondary/50 to-primary/50 backdrop-blur-xl border-t border-gray-200 dark:border-white/10 mt-auto">
@@ -46,8 +48,10 @@ export default function Footer() {
               >
                 <Linkedin className="w-5 h-5 text-gray-700 dark:text-white/70 hover:text-accent transition-colors" />
               </a>
+              
+              {/* ✅ UPDATED EMAIL ICON LINK */}
               <a
-                href="mailto:support@aiinterviewer.com"
+                href={`mailto:${contactEmail}`}
                 className="w-10 h-10 bg-white/50 dark:bg-white/5 hover:bg-white/10 border border-gray-200 dark:border-white/10 rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110 hover:border-accent/30"
               >
                 <Mail className="w-5 h-5 text-gray-700 dark:text-white/70 hover:text-accent transition-colors" />
@@ -115,8 +119,9 @@ export default function Footer() {
                 </a>
               </li>
               <li>
+                {/* ✅ UPDATED CONTACT US TEXT LINK */}
                 <a
-                  href="#"
+                  href={`mailto:${contactEmail}`}
                   className="font-paragraph text-base text-gray-600 dark:text-white/70 hover:text-accent transition-colors"
                 >
                   Contact Us
