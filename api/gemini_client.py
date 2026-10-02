@@ -11,7 +11,7 @@ class GeminiClient:
         # We use a string for 'model' to satisfy checks like 'if self.client.model:' in other files
         self.model = None 
         # ⚡ FIX 1: Removed 'models/' prefix which caused the 404 error
-        self.model_name = 'gemini-1.5-flash'
+        self.model_name = 'gemini-2.5-flash'
         self.api_key_status = "not_set"
         
         if not GOOGLE_API_KEY:
